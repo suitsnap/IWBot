@@ -1,8 +1,5 @@
 import io.github.cdimascio.dotenv.Dotenv;
-import listeners.ButtonRoles;
-import listeners.Rules;
-import listeners.TicketSystem;
-import listeners.Voting;
+import listeners.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -23,7 +20,7 @@ public class IWBot {
         builder.setActivity(Activity.playing("MCC Island."));
         builder.enableIntents(EnumSet.allOf(GatewayIntent.class));
         JDA jda = builder.build();
-        jda.addEventListener(new TicketSystem(), new ButtonRoles(), new Rules(), new Voting());
+        jda.addEventListener(new TicketSystem(), new ButtonRoles(), new Rules(), new Voting(), new JoinToCreateVCListener());
     }
 
     public static void main(String[] args) {

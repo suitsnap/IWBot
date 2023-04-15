@@ -46,6 +46,51 @@ public class TicketSystem extends ListenerAdapter {
             event.reply("Message sent, king!").setEphemeral(true).queue();
             event.getChannel().sendMessageEmbeds(embed.build()).setActionRow(ticketButton).queue();
 
+        } else if (command.equals("purge")){
+            String[] teamchannels =
+                    {"1092171727892643922","1093935763240001586"
+                    ,"1093935837521125506","1093935500181651466"
+                    ,"1093711207837466644","1093711316650315776"
+                    ,"1093711389228548316","1093711610616492113"
+                    ,"1093711717931946034","1093712245592170597"};
+            for (String channel : teamchannels){
+                event.getGuild().getTextChannelById(channel).getIterableHistory().forEach(message -> message.delete().queue());
+            }
+            event.reply("All messages are being purged!").setEphemeral(true).queue(); // Sends a confirmation message
+
+        } else if (command.equals("team-initiate")){
+            event.reply("Sending now!").setEphemeral(true).queue();
+            //Red Rabbits
+            event.getGuild().getTextChannelById("1092171727892643922").sendMessage(
+                    "<@&1092166116157173860>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1092160418270695564").queue();
+            //Orange Ocelots
+            event.getGuild().getTextChannelById("1093935763240001586").sendMessage(
+                    "<@&1092166991571337296>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1092160481445289995").queue();
+            //Yellow Yaks
+            event.getGuild().getTextChannelById("1093935837521125506").sendMessage(
+                    "<@&1092171089632841878>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1092160544485671073").queue();
+            //Lime Llamas
+            event.getGuild().getTextChannelById("1093935500181651466").sendMessage(
+                    "<@&1092190734477709315>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1092191134031302726").queue();
+            //Green Geckos
+            event.getGuild().getTextChannelById("1093711207837466644").sendMessage(
+                    "<@&1093708909925122059>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1093713504969695282").queue();
+            //Cyan Coyotes
+            event.getGuild().getTextChannelById("1093711316650315776").sendMessage(
+                    "<@&1093709536319254559>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1093713641049698354").queue();
+            //Aqua Axolotls
+            event.getGuild().getTextChannelById("1093711389228548316").sendMessage(
+                    "<@&1093709616241713192>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1093713747324973158").queue();
+            //Blue Bats
+            event.getGuild().getTextChannelById("1093711610616492113").sendMessage(
+                    "<@&1093709718540795954>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1093713826798653621").queue();
+            //Purple Pandas
+            event.getGuild().getTextChannelById("1093711717931946034").sendMessage(
+                    "<@&1093709792012415067>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1093713936739741746").queue();
+            //Pink Parrots
+            event.getGuild().getTextChannelById("1093712245592170597").sendMessage(
+                    "<@&1093709868847870052>, please check you can see this message and the voice channel: https://discord.com/channels/1052015794395037776/1093714001726283877").queue();
+
         }
     }
 
@@ -75,19 +120,24 @@ public class TicketSystem extends ListenerAdapter {
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
         List<CommandData> commandData = new ArrayList<>();
+        commandData.add(Commands.slash("purge", "Purges a channel")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MESSAGE_MANAGE)));
+        commandData.add(Commands.slash("team-initiate", "Sends all the pings for team chats")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MESSAGE_MANAGE)));
         commandData.add(Commands.slash("ticket-enable", "Create the message for the ticket system.")
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER)));
         commandData.add(Commands.slash("role-enable", "Create the message for the role adding system.")
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER)));
         commandData.add(Commands.slash("rule-enable", "Create the message for the rules.")
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER)));
-        commandData.add(Commands.slash("vote-begin","Start voting")
-                .addOption(OptionType.BOOLEAN,"skybattle", "Is Sky Battle in the round options?",true)
-                .addOption(OptionType.BOOLEAN,"battlebox", "Is Battle Box in the round options?",true)
-                .addOption(OptionType.BOOLEAN,"holeinthewall", "Hole In The Wall in the round options?",true)
-                .addOption(OptionType.BOOLEAN,"togettotheotherside", "Is To Get To The Other Side in the round options?",true)
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER)));
-        commandData.add(Commands.slash("vote-end","Stops votes from being able to be added and ends the vote")
+        commandData.add(Commands.slash("vote-begin", "Starts a vote")
+                .addOption(OptionType.STRING, "title", "Title of the poll", true)
+                .addOption(OptionType.INTEGER, "duration", "How long should the vote last in minutes?", true)
+                .addOption(OptionType.BOOLEAN, "sky_battle", "Include Sky Battle in the vote?", true)
+                .addOption(OptionType.BOOLEAN, "battle_box", "Include Battle Box in the vote?", true)
+                .addOption(OptionType.BOOLEAN, "hole_in_the_wall", "Include Hole In The Wall in the vote", true)
+                .addOption(OptionType.BOOLEAN, "to_get_to_the_other_side", "Include To Get To The Other Side in the vote?", true)
+                .addOption(OptionType.STRING, "role_id", "Optional role ID that restricts who can vote", false)
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER)));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
